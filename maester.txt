@@ -1,0 +1,31 @@
+
+volumes:
+  alias               :    drive
+  fpath               :    data\drive.txt
+  fragmentize         :    True
+  lexify              :    True
+  sections            :    chapter:===== , scene:-----
+  divisions           :    page:|| , paragraph:_whitespace
+  cleanup             :    Apply:False , rpath:data\replace.txt 
+
+  alias               :    butcher
+  fpath               :    data\butcher.txt
+  fragmentize         :    True
+  lexify              :    True
+  sections            :    chapter:===== , scene:-----
+  divisions           :    page:|| , paragraph:_whitespace
+  cleanup             :    Apply:False , rpath:data\replace.txt 
+
+  alias               :    churn
+  fpath               :    data\churn.txt
+  fragmentize         :    True
+  lexify              :    True
+  sections            :    chapter:===== , scene:-----
+  divisions           :    page:|| , paragraph:_whitespace
+  cleanup             :    Apply:False , rpath:data\replace.txt 
+
+
+index_hierarchy: chapter, scene, paragraph
+
+map_path: data\corpus_data.xlsx
+
