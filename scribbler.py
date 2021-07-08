@@ -24,7 +24,7 @@ from wand.image import Image as wi
 # Configuration
 # ------------------------------------------------------------------------------
 
-iname = "data\\drive.pdf"
+iname = "data\\Drive.pdf"
 oname = "data\\drive.txt"
 
 include_page_numbers = True
@@ -64,6 +64,8 @@ def main():
     # text to a running array as it goes
     # --------------------------------------------------------------------------
     print("...extracting text from images using OCR...")
+
+    pt.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
     extracted_text = []
     for i, imgBlob in enumerate(imgBlobs):
         im = Image.open(io.BytesIO(imgBlob))

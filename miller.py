@@ -10,6 +10,7 @@
 # Import
 # ------------------------------------------------------------------------------
 from datetime import datetime
+import io
 import os
 import sys
 import argparse
@@ -59,6 +60,8 @@ books['tiamat']     = {'order':8,     'name':"Tiamat's Wrath"                  ,
 # ------------------------------------------------------------------------------
 # Main
 # ------------------------------------------------------------------------------
+ofile = oname = "data\\churnBS4.txt"
+
 def main():
     # --------------------------------------------------------------------------
     # Start
@@ -70,30 +73,39 @@ def main():
     # --------------------------------------------------------------------------
     url = books['churn']['url']
     text = pull_online_text(url)
-
+    ofile = io.open(oname, "w", encoding='utf-8')
+    ofile.write(text)
+    ofile.close()
     # --------------------------------------------------------------------------
     # Finish
     # --------------------------------------------------------------------------
-    print("...finished...for now.")
+    print("...finished...for now... heres all the text in the web page")
+    # print(text)
 
 # ------------------------------------------------------------------------------
 # Pull text from site
 # ------------------------------------------------------------------------------
-def pull_online_text(url):
+def pull_online_text(url) -> str:
     # --------------------------------------------------------------------------
     # Pull the page source
     # --------------------------------------------------------------------------
+    # need to have chromedriver.exe in your Path or your directory. 
     driver = webdriver.Chrome()
-    driver.maximize_window()
+    # driver.maximize_window()
+
     driver.get(url)
+    print("... grabbing URL...")
+    # driver.page_source - this returns ALL the HTML of that webpage
     pagesource = driver.page_source
     #driver.quit()
 
     # --------------------------------------------------------------------------
     # Soupify it
     # --------------------------------------------------------------------------
-    soup = BeautifulSoup(pagesource,'lxml')
-    print(soup)
+    soup = BeautifulSoup(pagesource,'html.parser')
+    print("...Activating Soup...")
+    # print(soup.prettify())
+    # print(soup.get_text())
 
     #stuff = soup.find_all("div",class_="sc-biJonm")
     #for thing in stuff:
@@ -101,8 +113,17 @@ def pull_online_text(url):
 
     # --------------------------------------------------------------------------
     # --------------------------------------------------------------------------
-    text = ""
+    # text = str(soup.get_text())
+    
 
+    # this grabs all the Divs and i had to search which div I wanted. Its teh 75 div we want in the array 
+    # newsoup = soup.find_all('div')[74]
+    
+    #this grabs the ID and returns the DOM 
+    newsoup = soup.find(id="textToRead")
+
+    text = str(newsoup.get_text())
+    # text = str(soup.title.string)
     # --------------------------------------------------------------------------
     # Finish
     # --------------------------------------------------------------------------
