@@ -92,16 +92,15 @@ def pull_online_text(url):
     # --------------------------------------------------------------------------
     # Soupify it
     # --------------------------------------------------------------------------
-    soup = BeautifulSoup(pagesource,'lxml')
-    print(soup)
+    soup = BeautifulSoup(pagesource,'html.parser')
+    print("...activating soup...")
 
-    #stuff = soup.find_all("div",class_="sc-biJonm")
-    #for thing in stuff:
-    #    print(thing)
+    newsoup = soup.find(id="textToRead")
+    text = str(newsoup.get_text())
 
     # --------------------------------------------------------------------------
     # --------------------------------------------------------------------------
-    text = ""
+    print(text)
 
     # --------------------------------------------------------------------------
     # Finish
