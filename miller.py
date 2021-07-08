@@ -20,6 +20,8 @@ from bs4 import BeautifulSoup
 from selenium import webdriver
 import pandas as pd
 
+# import requests
+
 
 # ------------------------------------------------------------------------------
 # Init
@@ -38,6 +40,14 @@ parser = argparse.ArgumentParser()
 #parser.add_argument("other_arg_alas", type=int, help="help text to be displayed")
 
 args = parser.parse_args()
+
+oname = "data\\churnBS4.txt"
+onameTOC = "data\\levianthanTOC.txt"
+TOCDict = {}
+
+TOCDict['leviathan_TOC'] = {'name':'Leviathan Wakes Table of Contents', 'url': "http://thefreeonlinenovel.com/bi/leviathan-wakes"}
+baseURL = "http://thefreeonlinenovel.com"
+alinks = {}
 
 
 books = {}
@@ -60,8 +70,6 @@ books['tiamat']     = {'order':8,     'name':"Tiamat's Wrath"                  ,
 # ------------------------------------------------------------------------------
 # Main
 # ------------------------------------------------------------------------------
-ofile = oname = "data\\churnBS4.txt"
-
 def main():
     # --------------------------------------------------------------------------
     # Start
@@ -72,15 +80,76 @@ def main():
     # 
     # --------------------------------------------------------------------------
     url = books['churn']['url']
-    text = pull_online_text(url)
-    ofile = io.open(oname, "w", encoding='utf-8')
-    ofile.write(text)
+    
+    
+    TOCurl = TOCDict['leviathan_TOC']['url']
+    
+    pull_online_TOC(TOCurl)
+    print(TOCDict)
+    ofile = io.open(onameTOC, "w", encoding='utf-8')
+    ofile.write(str(TOCDict))
     ofile.close()
+    
+    # ofile = io.open(oname, "w", encoding='utf-8')
+    # ofile.write(TOCDict)
+    # ofile.close()
     # --------------------------------------------------------------------------
     # Finish
     # --------------------------------------------------------------------------
     print("...finished...for now... heres all the text in the web page")
     # print(text)
+
+
+# Pull Table of Contents function 
+def pull_online_TOC(url):
+    # --------------------------------------------------------------------------
+    # Pull the page source
+    # --------------------------------------------------------------------------
+    # need to have chromedriver.exe in your Path or your directory. 
+    driver = webdriver.Chrome()
+    # driver.maximize_window()
+
+    driver.get(url)
+    
+    print("... grabbing URL...")
+    # driver.page_source - this returns ALL the HTML of that webpage
+    pagesource = driver.page_source
+    
+
+    # --------------------------------------------------------------------------
+    # Soupify it
+    # --------------------------------------------------------------------------
+    TOCSoup = BeautifulSoup(pagesource,'html.parser')
+    print("...Activating Soup...")
+
+    for i, link in enumerate(TOCSoup.find_all('a')):
+        dirLink = link.get('href')
+        if dirLink != None: 
+            con = link.get('href').split('/')
+            if con[1] == "con":
+                alinks[i] = str(dirLink)
+
+    for i, key in enumerate(alinks):
+        TOCDict['url_' + str(i)] = baseURL + str(alinks[key])
+    
+    # print(TOCDict)
+    # TOCDictText = str(TOCDict)
+    # # text = str(soup.title.string)
+    # # --------------------------------------------------------------------------
+    # # Finish
+    # # --------------------------------------------------------------------------
+    # return TOCDictText
+
+
+
+
+
+
+def tester(x) -> str:
+    print('THIS IS A TESTER FUNCTION: ' + str(x))
+
+
+
 
 # ------------------------------------------------------------------------------
 # Pull text from site
@@ -122,7 +191,7 @@ def pull_online_text(url) -> str:
     #this grabs the ID and returns the DOM 
     newsoup = soup.find(id="textToRead")
 
-    text = str(newsoup.get_text())
+    text = str(newsoup)
     # text = str(soup.title.string)
     # --------------------------------------------------------------------------
     # Finish
