@@ -1,0 +1,26 @@
+
+Chris Valenzuela Notes: 
+
+7/7/2021:
+
+    Clone this from Grant Dickerson's repository: 
+        
+        https://github.com/TheManInTheShack/readalowda
+
+    Looking to help him with BeautifulSoup and web scraping. So far ive been able to scrape text from the URL page hes been trying to open. (i.e HTML -> text file)
+
+7/8/2021:
+
+    Created a function "chapter_links_creator" which grabs the links from the base directory and puts it into a dictionary/text key = 'chapter_links
+
+    Updated:
+
+        function chapter_links_creator - grabs the links of each chapter and puts a "link_i and text_i" key into a dictionary which gets put into an array into the the original dictionary
+
+        function textfromchapter - grabs the link and scrapes just the specific texts we want
+
+    Problem: 
+
+        1. We inevitably have to run through 57 chapters = 57 links which takes up some compile time and makes this app more of a 1 time type of process.
+        2. Some code maybe still premature and could be more dynamic.
+        3. I worked on creating the data structure with what i had in mind. Slightly off to what you want i believe

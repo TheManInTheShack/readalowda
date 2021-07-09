@@ -45,7 +45,7 @@ oname = "data\\churnBS4.txt"
 onameTOC = "data\\levianthanTOC.txt"
 TOCDict = {}
 
-TOCDict['leviathan_TOC'] = {'name':'Leviathan Wakes Table of Contents', 'url': "http://thefreeonlinenovel.com/bi/leviathan-wakes"}
+TOCDict['leviathan'] = {'name':'Leviathan Wakes', 'baseURL': 'http://thefreeonlinenovel.com', 'url': "http://thefreeonlinenovel.com/bi/leviathan-wakes", 'chapter_links': []}
 baseURL = "http://thefreeonlinenovel.com"
 alinks = {}
 
@@ -79,29 +79,37 @@ def main():
     # --------------------------------------------------------------------------
     # 
     # --------------------------------------------------------------------------
-    url = books['churn']['url']
+
+    # url = books['churn']['url']
     
     
-    TOCurl = TOCDict['leviathan_TOC']['url']
+    TOCurl = TOCDict['leviathan']['url']
     
-    pull_online_TOC(TOCurl)
-    print(TOCDict)
+    chapter_links_creator(TOCurl)
+    
+
+    for i in range(0, length):
+        
+        chaptertext = textfromchapter(TOCDict['leviathan']['chapter_links'][0]['link_CH_'+str(i)])
+        TOCDict['leviathan']['chapter_links'][0]['text_CH_'+str(i)] = chaptertext
+
+
     ofile = io.open(onameTOC, "w", encoding='utf-8')
     ofile.write(str(TOCDict))
     ofile.close()
-    
-    # ofile = io.open(oname, "w", encoding='utf-8')
-    # ofile.write(TOCDict)
-    # ofile.close()
+
+
     # --------------------------------------------------------------------------
     # Finish
     # --------------------------------------------------------------------------
     print("...finished...for now... heres all the text in the web page")
-    # print(text)
+    
 
 
 # Pull Table of Contents function 
-def pull_online_TOC(url):
+def chapter_links_creator(url):
+
+    global length
     # --------------------------------------------------------------------------
     # Pull the page source
     # --------------------------------------------------------------------------
@@ -129,24 +137,79 @@ def pull_online_TOC(url):
             if con[1] == "con":
                 alinks[i] = str(dirLink)
 
-    for i, key in enumerate(alinks):
-        TOCDict['url_' + str(i)] = baseURL + str(alinks[key])
+    chapterlinksarray = []
+    chapterlinksdict = {}
+
+    length = len(alinks)
+       
     
-    # print(TOCDict)
-    # TOCDictText = str(TOCDict)
-    # # text = str(soup.title.string)
-    # # --------------------------------------------------------------------------
-    # # Finish
-    # # --------------------------------------------------------------------------
-    # return TOCDictText
+    for i, key in enumerate(alinks):
+        # print(baseURL + str(alinks[key]))
+        # TOCDict['leviathan']['chapter_links'] = TOCDict['leviathan']['chapter_links'] + (baseURL + str(alinks[key])) + ', '
+        # chapterlinksdict.append(baseURL + str(alinks[key]))
+        chapterlinksdict['link_CH_'+str(i)] = baseURL + str(alinks[key])
+        chapterlinksdict['text_CH_'+str(i)] = ''
+    # print(chapterlinksdict)
+    chapterlinksarray.append(chapterlinksdict)
+    
+
+    TOCDict['leviathan']['chapter_links'] = TOCDict['leviathan']['chapter_links'] + chapterlinksarray
+    
 
 
 
+def textfromchapter(chapter) -> str:
 
+    driver = webdriver.Chrome()
+    # driver.maximize_window()
+
+    driver.get(chapter)
+    print("... grabbing Chapter...")
+    pagesource = driver.page_source
+    soup = BeautifulSoup(pagesource,'html.parser')
+
+    print("...Activating Chapter Soup...")
+    
+
+    # text = str(soup.get_text())
+    td_list = []
+    table = (soup.find_all('td'))
+    # for i, table in enumerate(table):
+    for i, eachTag in enumerate(table):
+        # we are adding id tags to each td in case i need to call them
+        eachTag.attrs["id"] = 'td_id_' + str(i)
+        # it turns out i can just add them to an array and all i care about is the first one 
+        td_list.append(eachTag)
+    
+    #we only care about the first td since that contains all the text we need. 
+    text = td_list[0].get_text()
+    
+    # --------------------------------------------------------------------------
+    # Finish
+    # --------------------------------------------------------------------------
+    return str(text)
 
 
 def tester(x) -> str:
     print('THIS IS A TESTER FUNCTION: ' + str(x))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
