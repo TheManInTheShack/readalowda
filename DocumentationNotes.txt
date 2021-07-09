@@ -11,13 +11,11 @@ Chris Valenzuela Notes:
 
 7/8/2021:
 
-    Created a function "chapter_links_creator" which grabs the links from the base directory and puts it into a dictionary/text key = 'chapter_links
-
     Updated:
 
-        function chapter_links_creator - grabs the links of each chapter and puts a "link_i and text_i" key into a dictionary which gets put into an array into the the original dictionary
-
-        function textfromchapter - grabs the link and scrapes just the specific texts we want
+        - function chapter_links_creator - grabs the links of each chapter and puts a "link_i and text_i" key into a dictionary which gets put into an array into the the original dictionary (yes its confusing idk)
+        - function textfromchapter - grabs the link and scrapes just the specific texts we want
+        - I placed dictionary/object in a text file "levianthanTOC.txt" take a peak - PS it keeps the indentation when you call the specific text
 
     Problem: 
 
